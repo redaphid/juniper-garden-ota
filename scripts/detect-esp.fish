@@ -6,3 +6,4 @@ sleep 2
 ls /dev | grep tty > /tmp/detect-esp-after
 echo "alright, what I saw is:"
 diff /tmp/detect-esp-before /tmp/detect-esp-after
+
