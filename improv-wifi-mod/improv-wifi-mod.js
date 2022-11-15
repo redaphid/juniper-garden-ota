@@ -25,9 +25,9 @@ export default class ImprovWifi extends BLEServer {
     startImprov() {
         let advertisingData = {
             flags: GAP.ADFlag.LE_GENERAL_DISCOVERABLE_MODE,
+            completeUUID128List: [uuid `00467768-6228-2272-4663-277478268000`],
             completeName: this.deviceName,
             shortName: this.deviceName,
-            serviceDataUUID128: [uuid `00467768-6228-2272-4663-277478268000`],
         };
         this.startAdvertising({ advertisingData });
     }
