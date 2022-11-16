@@ -23,6 +23,7 @@ export default class ImprovWifi extends BLEServer {
         this.onCredentialsRecieved = onCredentialsRecieved;
     }
     startImprov() {
+        trace("Starting Improv\n");
         let advertisingData = {
             flags: GAP.ADFlag.LE_GENERAL_DISCOVERABLE_MODE,
             completeUUID128List: [uuid `00467768-6228-2272-4663-277478268000`],
@@ -32,6 +33,7 @@ export default class ImprovWifi extends BLEServer {
         this.startAdvertising({ advertisingData });
     }
     onDisconnected() {
+        trace("Disconnected\n");
         this.state = StateCodes.STATE_AUTHORIZED;
         this.error = ErrorCodes.ERROR_NONE;
         this.errorCharacteristic = null;
@@ -54,6 +56,7 @@ export default class ImprovWifi extends BLEServer {
         this.error = ErrorCodes.ERROR_NONE;
     }
     onCharacteristicNotifyDisabled(characteristic) {
+        trace('onCharacteristicNotifyDisabled\n');
         switch (characteristic.name) {
             case 'STATE':
                 this.stateCharacteristic = null;
