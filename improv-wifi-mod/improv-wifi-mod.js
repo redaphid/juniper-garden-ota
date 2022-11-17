@@ -23,6 +23,7 @@ export default class ImprovWifi extends BLEServer {
         this.onCredentialsRecieved = onCredentialsRecieved;
     }
     startImprov() {
+        trace("Starting Improv\n");
         let advertisingData = {
             flags: GAP.ADFlag.LE_GENERAL_DISCOVERABLE_MODE,
             completeUUID128List: [uuid `00467768-6228-2272-4663-277478268000`],
@@ -32,6 +33,7 @@ export default class ImprovWifi extends BLEServer {
         this.startAdvertising({ advertisingData });
     }
     onDisconnected() {
+        trace("Disconnected\n");
         this.state = StateCodes.STATE_AUTHORIZED;
         this.error = ErrorCodes.ERROR_NONE;
         this.errorCharacteristic = null;
@@ -39,9 +41,11 @@ export default class ImprovWifi extends BLEServer {
         this.startImprov();
     }
     onReady() {
+        trace("Ready\n");
         this.startImprov();
     }
     onCharacteristicRead(characteristic) {
+        trace(`Read: ${JSON.stringify(characteristic)}\n`);
         if (characteristic.name === "STATE") {
             return this.state;
         }
@@ -50,10 +54,12 @@ export default class ImprovWifi extends BLEServer {
         }
     }
     onConnected() {
+        trace("Connected\n");
         this.state = StateCodes.STATE_AUTHORIZED;
         this.error = ErrorCodes.ERROR_NONE;
     }
     onCharacteristicNotifyDisabled(characteristic) {
+        trace('onCharacteristicNotifyDisabled\n');
         switch (characteristic.name) {
             case 'STATE':
                 this.stateCharacteristic = null;
@@ -73,6 +79,7 @@ export default class ImprovWifi extends BLEServer {
         }
     }
     onCharacteristicNotifyEnabled(characteristic) {
+        trace('onCharacteristicNotifyEnabled\n');
         this.notify = characteristic;
         switch (characteristic.name) {
             case 'STATE':
@@ -98,6 +105,7 @@ export default class ImprovWifi extends BLEServer {
         }
     }
     onCharacteristicWritten(characteristic, value) {
+        trace(`Written: ${characteristic?.name}\n`);
         // this is where we go and update state again if necessary
         switch (characteristic.name) {
             case "RPC_COMMAND":
@@ -119,6 +127,7 @@ export default class ImprovWifi extends BLEServer {
         }
     }
     handleInboundWifiSettings(data) {
+        trace("Handling inbound wifi settings\n");
         const ssid_length = data[2];
         const ssid_start = 3;
         const ssid_end = ssid_start + ssid_length;
@@ -138,6 +147,7 @@ export default class ImprovWifi extends BLEServer {
         }
     }
     buildValue(data, start, end) {
+        trace(`Building value from ${start} to ${end}\n`);
         let str = '';
         for (var i = start; i < end; i++) {
             str += String.fromCharCode(data[i]);
@@ -145,16 +155,19 @@ export default class ImprovWifi extends BLEServer {
         return str;
     }
     notifyState() {
+        trace(`Notifying state: ${this.state}\n`);
         if (!this.stateCharacteristic)
             return;
         this.notifyValue(this.stateCharacteristic, this.state);
     }
     notifyError() {
+        trace(`Notifying error: ${this.error}\n`);
         if (!this.errorCharacteristic)
             return;
         this.notifyValue(this.errorCharacteristic, this.error);
     }
     couldNotConnect() {
+        trace("Could not connect\n");
         this.error = ErrorCodes.ERROR_UNABLE_TO_CONNECT;
         this.notifyError();
     }
