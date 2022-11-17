@@ -21,3 +21,10 @@
 
 * I found a cdn with semver! Maybe we can use this to get an earlier version
   https://unpkg.com/esp-web-tools@9.0.4/dist/install-button.js
+
+* improv-wifi.com, inspect element, set debug level to verbose
+* Manually implemented the spec and wrote it to the device via a low-level tool
+
+## Things we need to do
+- Write the checksum on the packet
+- Deal with ssid+password > 20 bytes
