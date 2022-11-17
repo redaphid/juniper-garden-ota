@@ -8,6 +8,8 @@
 
 # Things we have tried
 * Using the improv-wifi-mod of Juniper Gardens
+ - _note: we noticed that the uuid had to be reversed for the ESP server side to find the BLE device_
+ -  _We also stopped commenting out the length check, as using that bleservices json file y'all had was sufficient_
 * Using the reference implementation of the improv-wifi from improv-wifi.com
   - `https://improv-wifi.com`
   - _note: this works successfully when flashing over usb, but not over ble_
