@@ -18,3 +18,6 @@
 * Building the ESPHome firmware locally
  `git clone git@github.com:esphome/esphome.git`
 * Using platform.io
+
+* I found a cdn with semver! Maybe we can use this to get an earlier version
+  https://unpkg.com/esp-web-tools@9.0.4/dist/install-button.js

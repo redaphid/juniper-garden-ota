@@ -45,7 +45,7 @@ export default class ImprovWifi extends BLEServer {
         this.startImprov();
     }
     onCharacteristicRead(characteristic) {
-        trace(`Read: ${characteristic?.name}\n`);
+        trace(`Read: ${JSON.stringify(characteristic)}\n`);
         if (characteristic.name === "STATE") {
             return this.state;
         }
