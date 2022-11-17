@@ -105,12 +105,14 @@ export default class ImprovWifi extends BLEServer {
         }
     }
     onCharacteristicWritten(characteristic, value) {
-        trace(`Written: ${characteristic?.name}\n`);
+        // 010a07446f70706c6572096d6f666f7332303130
+        trace(`Written: ${characteristic.name}, in state ${characteristic.state}, with value ${value}, value[0] is ${value?.[0]}, which is a type ${typeof value?.[0]} \n`);
         // this is where we go and update state again if necessary
         switch (characteristic.name) {
             case "RPC_COMMAND":
                 this.ssid = value;
                 if (value[0] === Commands.WIFI_SETTINGS) {
+                    trace("Handling wifi settings\n");
                     this.state = StateCodes.STATE_PROVISIONING;
                     this.notifyState();
                     this.handleInboundWifiSettings(value);
