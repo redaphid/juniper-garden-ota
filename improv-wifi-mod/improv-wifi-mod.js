@@ -46,11 +46,15 @@ export default class ImprovWifi extends BLEServer {
     }
     onCharacteristicRead(characteristic) {
         trace(`Read: ${JSON.stringify(characteristic)}\n`);
-        if (characteristic.name === "STATE") {
-            return this.state;
-        }
-        if (characteristic.name === "ERROR") {
-            return this.error;
+        switch(characteristic.name){
+            case "ERROR":
+                return this.error;
+            case "STATE":
+            case "RPC_RESULT":
+                return this.state;
+            default:
+                trace(`I have no idea what ${characteristic.name} is supposed to be`)
+                return this.error
         }
     }
     onConnected() {
@@ -79,7 +83,7 @@ export default class ImprovWifi extends BLEServer {
         }
     }
     onCharacteristicNotifyEnabled(characteristic) {
-        trace('onCharacteristicNotifyEnabled\n');
+        trace(`onCharacteristicNotifyEnabled: characteristic: ${characteristic.name} \n`);
         this.notify = characteristic;
         switch (characteristic.name) {
             case 'STATE':

@@ -1,5 +1,5 @@
 function someHandleCredsFunction ({ ssid, password }) {
-  trace(`ssid: ${ssid}, password: ${password}`);
+  trace(`someHandleCredsFunction: ssid: ${ssid}, password: ${password}`);
   return true
 }
 
