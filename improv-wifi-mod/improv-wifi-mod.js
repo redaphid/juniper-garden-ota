@@ -143,16 +143,17 @@ export default class ImprovWifi extends BLEServer {
         const ssid = this.buildValue(data, ssid_start, ssid_end);
         const password = this.buildValue(data, pass_start, pass_end);
         let result = this.onCredentialsRecieved({ ssid, password });
-        if (!result) {
-            trace("Credentials were authorized :) \n");
+        trace(`Result of onCredentialsRecieved is ${result}\n`);
+        if (result === false ) { // apparently js on microcontrollers doesn't have a concept of truthy and falsy
+            trace("Credentials weren't authorized :) \n");
             this.state = StateCodes.STATE_AUTHORIZED;
             this.notifyState();
+            return
+
         }
-        else {
-            trace("Credentials were not authorized :( \n");
-            this.state = StateCodes.STATE_PROVISIONED;
-            this.notifyState();
-        }
+        trace("Credentials were authorized :) \n");
+        this.state = StateCodes.STATE_PROVISIONED;
+        this.notifyState();
     }
     buildValue(data, start, end) {
         trace(`Building value from ${start} to ${end}\n`);
