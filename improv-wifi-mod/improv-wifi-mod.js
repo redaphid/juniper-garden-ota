@@ -145,10 +145,11 @@ export default class ImprovWifi extends BLEServer {
         let result = this.onCredentialsRecieved({ ssid, password });
         trace(`Result of onCredentialsRecieved is ${result}\n`);
         if (!result) {
-            trace("Credentials weren't authorized :) \n");
+            trace("Credentials weren't authorized :( \n");
             this.state = StateCodes.ERROR_UNKNOWN;
-            this.notifyState();
-            return
+            this.error = ErrorCodes.ERROR_NOT_AUTHORIZED;
+            this.notifyError();
+            return;
 
         }
         trace("Credentials were authorized :) \n");
@@ -170,9 +171,10 @@ export default class ImprovWifi extends BLEServer {
         this.notifyValue(this.stateCharacteristic, this.state);
     }
     notifyError() {
-        trace(`Notifying error: ${this.error}\n`);
+        trace(`Notifying this characteristic: ${this.errorCharacteristic?.name} this error:  ${this.error}\n`);
         if (!this.errorCharacteristic)
             return;
+
         this.notifyValue(this.errorCharacteristic, this.error);
     }
     couldNotConnect() {
