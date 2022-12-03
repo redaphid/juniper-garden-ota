@@ -5,6 +5,8 @@ import BLEExports from './consts';
 const StateCodes = BLEExports.StateCodes;
 const ErrorCodes = BLEExports.ErrorCodes;
 const Commands = BLEExports.Commands;
+
+// FYI class definition for BLEServer can be found @ <moddable-project-dir>/modules/network/ble/bleserver.js
 export default class ImprovWifi extends BLEServer {
     deviceName;
     ssid;
