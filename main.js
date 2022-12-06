@@ -1,51 +1,58 @@
-import OTA from "ota";
+/*
+ * Copyright (c) 2021-2022  Moddable Tech, Inc.
+ *
+ *   This file is part of the Moddable SDK.
+ *
+ *   This work is licensed under the
+ *       Creative Commons Attribution 4.0 International License.
+ *   To view a copy of this license, visit
+ *       <http://creativecommons.org/licenses/by/4.0>.
+ *   or send a letter to Creative Commons, PO Box 1866,
+ *   Mountain View, CA 94042, USA.
+ *
+ */
 
-// Request definition: /home/redaphid/Projects/moddable/modules/network/http/http.js
-import {Request} from "http";
+import WiFi from "wifi";
 
-const host = "http://192.168.1.103:8080";
-const path = "/YOUR/PATH/HERE.bin"
+trace(`Wi-Fi ${WiFi.status}\n`);
+WiFi.mode = 1; // station mode
 
-const request = new Request({host, path});
-trace(`requesting ${host}${path}\n`);
-request.callback = function(message, value, etc) {
-  trace(`message: ${message}, value: ${value}, etc: ${etc}\n`);
-	switch (message) {
-		case Request.status:
-			if (200 !== value)
-				throw new Error("unexpected http status");
-			break;
+if (1) {
+	// single access point
+	new WiFi(
+		{
+			ssid: "access point name",
+			password: "password"
+		},
+		function (msg) {
+			trace(`Wi-Fi ${msg}\n`);
+		}
+	);
+}
+else {
+	// multiple access points
 
-		case Request.header:
-			if ("content-length" === value) {
-				try {
-					this.byteLength = parseInt(etc);
-					this.ota = new OTA({byteLength: this.byteLength});
-					this.received = 0;
-				}
-				catch (e) {
-					throw new Error("unable to start OTA: " + e);
-				}
-			}
-			break;
+	const AccessPoints = [
+		{
+			ssid: "access point name one",
+			password: "invalid!"		// force failure in simulator
+		},
+		{
+			ssid: "access point name two",
+			password: "password"
+		},
+		{
+			ssid: "access point name three",
+			password: "password"
+		}
+	];
 
-		case Request.responseFragment: {
-			const bytes = this.read(ArrayBuffer);
-			this.received += bytes.byteLength;
-			this.ota.write(bytes);
-			trace(`received ${this.received} of ${this.byteLength}\n`);
-			} break;
-
-		case Request.responseComplete:
-			this.ota.complete();
-			trace("ota complete\n");
-			break;
-
-		default:
-			if (message < 0) {
-				this.ota.cancel();
-				throw new Error("http error");
-			}
-			break;
-	}
+	new WiFi(
+		{},
+		function (msg, value) {
+			trace(`Wi-Fi ${msg}`, (undefined !== value) ? ` @ ${value}` : "", "\n");
+			if ("getAP" === msg)
+				return AccessPoints[value % AccessPoints.length];
+		}
+	);
 }
