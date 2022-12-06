@@ -13,46 +13,48 @@
  */
 
 import WiFi from "wifi";
+import credentials from './wifi-credentials'
+trace('\n\n\n\n\n\n\n\n\nBEGIN\n\n\n\n\n\n\n');
+trace(`credentials: ${credentials.ssid}\n`);
+// trace(`Wi-Fi ${WiFi.status}\n`);
+// WiFi.mode = 1; // station mode
 
-trace(`Wi-Fi ${WiFi.status}\n`);
-WiFi.mode = 1; // station mode
+// if (1) {
+// 	// single access point
+// 	new WiFi(
+// 		{
+// 			ssid: "access point name",
+// 			password: "password"
+// 		},
+// 		function (msg) {
+// 			trace(`Wi-Fi ${msg}\n`);
+// 		}
+// 	);
+// }
+// else {
+// 	// multiple access points
 
-if (1) {
-	// single access point
-	new WiFi(
-		{
-			ssid: "access point name",
-			password: "password"
-		},
-		function (msg) {
-			trace(`Wi-Fi ${msg}\n`);
-		}
-	);
-}
-else {
-	// multiple access points
+// 	const AccessPoints = [
+// 		{
+// 			ssid: "access point name one",
+// 			password: "invalid!"		// force failure in simulator
+// 		},
+// 		{
+// 			ssid: "access point name two",
+// 			password: "password"
+// 		},
+// 		{
+// 			ssid: "access point name three",
+// 			password: "password"
+// 		}
+// 	];
 
-	const AccessPoints = [
-		{
-			ssid: "access point name one",
-			password: "invalid!"		// force failure in simulator
-		},
-		{
-			ssid: "access point name two",
-			password: "password"
-		},
-		{
-			ssid: "access point name three",
-			password: "password"
-		}
-	];
-
-	new WiFi(
-		{},
-		function (msg, value) {
-			trace(`Wi-Fi ${msg}`, (undefined !== value) ? ` @ ${value}` : "", "\n");
-			if ("getAP" === msg)
-				return AccessPoints[value % AccessPoints.length];
-		}
-	);
-}
+// 	new WiFi(
+// 		{},
+// 		function (msg, value) {
+// 			trace(`Wi-Fi ${msg}`, (undefined !== value) ? ` @ ${value}` : "", "\n");
+// 			if ("getAP" === msg)
+// 				return AccessPoints[value % AccessPoints.length];
+// 		}
+// 	);
+// }
