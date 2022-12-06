@@ -4,7 +4,11 @@
 ```js
 export const ssid = '<your-ssid>'
 export const password = '<your-password>'
-```
+``
+
+# Warnings!
+You may need to run `npm run clean` to fix some issues with the build process.
+
 
 # Links to Remember:
 * [Moddable SDK](https://github.com/Moddable-OpenSource/moddable)

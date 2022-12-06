@@ -1,7 +1,7 @@
 
 import WiFi from "wifi";
 import { Request } from "http";
-// import OTA from "ota";
+import OTA from "ota";
 
 import { ssid, password } from './wifi-credentials'
 trace('\n\n\n\n BEGIN \n');
@@ -54,6 +54,7 @@ const downloadOTAFirmware = async () => {
   return new Promise((resolve, reject) => {
     let request = new Request({ host: "192.168.1.103", port: 8080, path: "/" });
     request.callback = function (message, value, etc) {
+      trace(`request: msg ${message} value ${value} etc ${etc}\n`);
       switch (message) {
         case Request.status:
           if (200 !== value)
@@ -64,6 +65,7 @@ const downloadOTAFirmware = async () => {
           if ("content-length" === value) {
             try {
               byteLength = parseInt(etc);
+              trace(`about to OTA: byteLength: ${byteLength}\n`);
               ota = new OTA({ byteLength });
               received = 0;
             }

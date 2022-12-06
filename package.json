@@ -5,7 +5,8 @@
   "main": "main.js",
   "scripts": {
     "upload": "./scripts/run.fish",
-    "serve-ota": "http-server -c 0"
+    "serve-ota": "http-server -c 0",
+    "clean": "rm -rf $MODDABLE/build/tmp"
   },
   "repository": {
     "type": "git",
