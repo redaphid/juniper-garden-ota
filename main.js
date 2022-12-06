@@ -47,44 +47,48 @@ const connectToNetwork = ({ ssid, password }) => {
 
 const downloadOTAFirmware = async () => {
   trace('downloadOTAFirmware\n');
+  let ota = null;
+  let byteLength = -1;
+  let received = 0;
+
   return new Promise((resolve, reject) => {
     let request = new Request({ host: "192.168.1.103", port: 8080, path: "/" });
     request.callback = function (message, value, etc) {
       switch (message) {
         case Request.status:
           if (200 !== value)
-            throw new Error("unexpected http status");
+            reject(Error("unexpected http status"))
           break;
 
         case Request.header:
           if ("content-length" === value) {
             try {
-              this.byteLength = parseInt(etc);
-              // this.ota = new OTA({ byteLength: this.byteLength });
-              this.received = 0;
+              byteLength = parseInt(etc);
+              ota = new OTA({ byteLength });
+              received = 0;
             }
             catch (e) {
-              throw new Error("unable to start OTA: " + e);
+              reject(new Error("unable to start OTA: " + e));
             }
           }
           break;
 
         case Request.responseFragment: {
-          const bytes = this.read(ArrayBuffer);
-          this.received += bytes.byteLength;
-          // this.ota.write(bytes);
-          trace(`received ${this.received} of ${this.byteLength}\n`);
+          const bytes = read(ArrayBuffer);
+          received += bytes.byteLength;
+          ota.write(bytes);
+          trace(`received ${received} of ${byteLength}\n`);
         } break;
 
         case Request.responseComplete:
-          // this.ota.complete();
+          ota.complete();
           trace("ota complete\n");
           resolve();
           break;
 
         default:
           if (message < 0) {
-            // this.ota.cancel();
+            ota.cancel();
             reject(new Error("http error"));
           }
           break;
