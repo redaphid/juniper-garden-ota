@@ -1,20 +1,16 @@
 
 import WiFi from "wifi";
-import {Request} from "http";
+import { Request } from "http";
+
 import { ssid, password } from './wifi-credentials'
 trace('\n\n\n\n BEGIN \n');
 
 const main = async () => {
   trace('main\n');
   await connectToNetwork({ ssid, password });
-  trace('connected');
-  let request = new Request({ host: "google.com", path: "/", response: String });
-  request.callback = function (message, value, etc) {
-    if (Request.responseComplete == message) {
-      trace(value);
-      trace("\n");
-    }
-  }
+  trace('connected\n');
+  const firmware = await downloadOTAFirmware();
+  trace('downloaded\n');
 }
 
 const connectToNetwork = ({ ssid, password }) => {
@@ -47,6 +43,21 @@ const connectToNetwork = ({ ssid, password }) => {
     });
   })
 }
+
+const downloadOTAFirmware = async () => {
+  trace('downloadOTAFirmware\n');
+  return new Promise((resolve, reject) => {
+    let request = new Request({ host: "192.168.1.103", port: 8080, path: "/" });
+    request.callback = function (message, value, etc) {
+      if (Request.responseComplete == message) {
+        trace(value);
+        trace("\n");
+        resolve(value);
+      }
+    }
+  })
+}
+
 
 main().catch(err => {
   trace(`error: ${err.message}\n`);
