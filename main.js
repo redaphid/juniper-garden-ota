@@ -4,6 +4,19 @@ import {Request} from "http";
 import { ssid, password } from './wifi-credentials'
 trace('\n\n\n\n BEGIN \n');
 
+const main = async () => {
+  trace('main\n');
+  await connectToNetwork({ ssid, password });
+  trace('connected');
+  let request = new Request({ host: "google.com", path: "/", response: String });
+  request.callback = function (message, value, etc) {
+    if (Request.responseComplete == message) {
+      trace(value);
+      trace("\n");
+    }
+  }
+}
+
 const connectToNetwork = ({ ssid, password }) => {
   let times = 0;
   return new Promise((resolve, reject) => {
@@ -35,21 +48,7 @@ const connectToNetwork = ({ ssid, password }) => {
   })
 }
 
-const main = async () => {
-  trace('main\n');
-  await connectToNetwork({ ssid, password });
-  trace('connected');
-  // const { Request } = await import('http');
-  // const request = new Request({ host: 'www.example.com', path: '/', response: String });
-  // request.callback = function (message, value, etc) {
-  //   if (Request.responseComplete == message) {
-  //     trace(value);
-  //     trace("\n");
-  //   }
-  // }
-}
-
 main().catch(err => {
   trace(`error: ${err.message}\n`);
   throw err
-})
+});
