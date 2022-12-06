@@ -1,0 +1,23 @@
+{
+  "name": "juniper-gardens-twig-debug",
+  "version": "1.0.0",
+  "description": "1. create a file called `wifi-credentials.js` in the root of the project 2. add the following code to the file: ```js export const ssid = '<your-ssid>' export const password = '<your-password>' ```",
+  "main": "main.js",
+  "scripts": {
+    "upload": "./scripts/run.fish",
+    "serve-ota": "http-server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/loqwai/juniper-gardens-twig-debug.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/loqwai/juniper-gardens-twig-debug/issues"
+  },
+  "homepage": "https://github.com/loqwai/juniper-gardens-twig-debug#readme",
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  }
+}
