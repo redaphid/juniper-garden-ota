@@ -1,26 +1,55 @@
-/*
- * Copyright (c) 2021-2022  Moddable Tech, Inc.
- *
- *   This file is part of the Moddable SDK.
- *
- *   This work is licensed under the
- *       Creative Commons Attribution 4.0 International License.
- *   To view a copy of this license, visit
- *       <http://creativecommons.org/licenses/by/4.0>.
- *   or send a letter to Creative Commons, PO Box 1866,
- *   Mountain View, CA 94042, USA.
- *
- */
 
 import WiFi from "wifi";
 import { ssid, password } from './wifi-credentials'
-trace('\n\n\n\n\n\n\n\n\nBEGIN\n\n\n\n\n\n\n');
-trace(`credentials: ${ssid} ${password}\n`);
-trace(`Wi-Fi ${WiFi.status}\n`);
-WiFi.mode = 1; // station mode
-// single access point
-new WiFi({ ssid, password },
-  function (msg) {
-    trace(`Wi-Fi ${msg}\n`);
+trace('\n\n\n\n BEGIN \n');
+
+// const connectToNetwork = ({ ssid, password }) => {
+//   trace(`credentials: ${ssid} ${password}\n`);
+//   let result = false;
+//   const wifi = new WiFi({ ssid, password }, msg => {
+//     trace(`WiFi Message Trace - ${msg}\n`);
+//     switch (msg) {
+//       case WiFi.gotIP:
+//         trace(`connected\n`);
+//         result = true
+//         break;
+
+//       case WiFi.disconnected:
+//         trace(`disconnected\n`);
+//         WiFi.reconnect();
+//         break;
+
+//       default:
+//         trace(`unknown message: ${msg}\n`);
+//         break;
+//     }
+//   });
+//   trace(`about to connect`);P
+//   WiFi.connect()
+//   trace(`after connect`);
+//   // return result
+// }
+let times = 0
+let monitor = new WiFi({ ssid, password }, function (msg, code) {
+  trace(`callback: msg ${msg} code ${code}, times: ${++times}\n`);
+  switch (msg) {
+    case "gotIP":
+      trace(`IP address ${Net.get("IP")}\n`);
+
+      monitor = monitor.close();
+      return done();
+
+    case "connect":
+      trace(`Wi-Fi connected to "${Net.get("SSID")}"\n`);
+      return
+
+    case "disconnect":
+      trace((-1 === code) ? "Wi-Fi password rejected\n" : "Wi-Fi disconnected\n");
+      WiFi.connect({ssid,password});
+      return
+    default:
+      trace(`idk what this is: ${msg}\n`);
   }
-);
+});
+trace(`monitor is: ${monitor}\n`);
+// connectToNetwork({ ssid, password });
