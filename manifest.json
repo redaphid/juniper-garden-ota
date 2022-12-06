@@ -9,5 +9,16 @@
 		"*": [
 			"./*"
 		]
+	},
+	"platforms": {
+		"esp32": {
+			"modules": {
+				"ota": "$(BUILD)/devices/esp32/modules/ota/*"
+			},
+			"preload": "ota"
+		},
+		"...": {
+			"error": "unsupported target"
+		}
 	}
 }
