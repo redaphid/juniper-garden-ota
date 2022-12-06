@@ -1,4 +1,7 @@
-## MVP
-1. [x] Make improv wifi library correctly advertise and accept credentials, even if done manually.
-2. [ ] Work in [js computer fork](https://github.com/loqwai/juniper-improv-wifi-computer-fork) to correctly send creds to mod library
-3. [ ] Some other stuff that if we have time we can go over
+## For Improv-Wifi
+[ ] Do the checksum code
+
+## For OTA
+[ ] Minimum reproducible example from moddable examples
+[ ] Setup diagram/flow for checking ota versions and doing a manual pull for new version
+[ ] build all the things

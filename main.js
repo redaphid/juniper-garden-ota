@@ -1,65 +1,55 @@
 
 import WiFi from "wifi";
+import {Request} from "http";
 import { ssid, password } from './wifi-credentials'
 trace('\n\n\n\n BEGIN \n');
 
-// const connectToNetwork = ({ ssid, password }) => {
-//   trace(`credentials: ${ssid} ${password}\n`);
-//   let result = false;
-//   const wifi = new WiFi({ ssid, password }, msg => {
-//     trace(`WiFi Message Trace - ${msg}\n`);
-//     switch (msg) {
-//       case WiFi.gotIP:
-//         trace(`connected\n`);
-//         result = true
-//         break;
+const connectToNetwork = ({ ssid, password }) => {
+  let times = 0;
+  return new Promise((resolve, reject) => {
+    const monitor = new WiFi({ ssid, password }, function (msg, code) {
+      trace(`callback: msg ${msg} code ${code}, times: ${++times}\n`);
+      switch (msg) {
+        case "gotIP":
+          trace('gotIP\n');
+          times = 0
+          monitor.close();
+          resolve(monitor);
 
-//       case WiFi.disconnected:
-//         trace(`disconnected\n`);
-//         WiFi.reconnect();
-//         break;
+        case "connect":
+          trace(`Wi-Fi connected to "${ssid}"\n`);
+          return
 
-//       default:
-//         trace(`unknown message: ${msg}\n`);
-//         break;
-//     }
-//   });
-//   trace(`about to connect`);P
-//   WiFi.connect()
-//   trace(`after connect`);
-//   // return result
-// }
-let times = 0
-const aps = [];
-/*
-WiFi.scan({}, ap => {
-  if (ap) {
-    if (!aps.find(value => ap.ssid == value)) {
-      aps.push(ap.ssid);
-      trace(` scan: ${ap.ssid}\n`);
-    }
-  }
-});*/
-let monitor = new WiFi({ ssid, password }, function (msg, code) {
-  trace(`callback: msg ${msg} code ${code}, times: ${++times}\n`);
-  switch (msg) {
-    case "gotIP":
-      trace(`IP address ${Net.get("IP")}\n`);
+        case "disconnect":
+          trace((-1 === code) ? "Wi-Fi password rejected\n" : "Wi-Fi disconnected\n");
+          if (times > 10) {
+            reject(new Error(`too many attempts`));
+            return;
+          }
+          WiFi.connect({ ssid, password });
+          return
+        default:
+          reject(new Error(`unknown message: ${msg}`));
+      }
+    });
+  })
+}
 
-      monitor = monitor.close();
-      return done();
+const main = async () => {
+  trace('main\n');
+  await connectToNetwork({ ssid, password });
+  trace('connected');
+  // const { Request } = await import('http');
+  // const request = new Request({ host: 'www.example.com', path: '/', response: String });
+  // request.callback = function (message, value, etc) {
+  //   if (Request.responseComplete == message) {
+  //     trace(value);
+  //     trace("\n");
+  //   }
+  // }
+}
 
-    case "connect":
-      trace(`Wi-Fi connected to "${Net.get("SSID")}"\n`);
-      return
-
-    case "disconnect":
-      trace((-1 === code) ? "Wi-Fi password rejected\n" : "Wi-Fi disconnected\n");
-      WiFi.connect({ssid,password});
-      return
-    default:
-      trace(`idk what this is: ${msg}\n`);
-  }
-});
-trace(`monitor is: ${monitor}\n`);
-// connectToNetwork({ ssid, password });
+main().catch(err => {
+  trace(`error: ${err.message}\n`);
+  throw err
+})
