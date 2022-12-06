@@ -2,11 +2,8 @@
 1. create a file called `wifi-credentials.js` in the root of the project
 2. add the following code to the file:
 ```js
-export const credentials = {
-  'ssid': '<your-ssid>',
-  'password': '<your-password>'
-}
-export default credentials
+export const ssid = '<your-ssid>'
+export const password = '<your-password>'
 ```
 
 # Links to Remember:
