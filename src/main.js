@@ -1,7 +1,7 @@
 
 import WiFi from "wifi";
 import { Request } from "http";
-import OTA from "ota";
+// import OTA from "ota";
 
 import { ssid, password } from './wifi-credentials'
 trace('\n\n\n\n BEGIN \n');

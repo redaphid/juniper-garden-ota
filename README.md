@@ -1,5 +1,5 @@
 # I'm using a lazy way of storing wifi creds for the demo
-1. create a file called `wifi-credentials.js` in the root of the project
+1. create a file called `wifi-credentials.js` in the `src/` of the project
 2. add the following code to the file:
 ```js
 export const ssid = '<your-ssid>'

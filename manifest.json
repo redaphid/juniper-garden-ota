@@ -7,18 +7,12 @@
 	],
 	"modules": {
 		"*": [
-			"./*"
+			"./src/*"
 		]
 	},
 	"platforms": {
 		"esp32": {
-			"build": {
-				"PARTITIONS_FILE": "./sdkconfig/partitions.csv"
-			},
-			"modules": {
-				"ota": "$(BUILD)/devices/esp32/modules/ota/*"
-			},
-			"preload": "ota"
+
 		},
 		"...": {
 			"error": "unsupported target"
