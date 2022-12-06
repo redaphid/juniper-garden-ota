@@ -30,6 +30,16 @@ trace('\n\n\n\n BEGIN \n');
 //   // return result
 // }
 let times = 0
+const aps = [];
+/*
+WiFi.scan({}, ap => {
+  if (ap) {
+    if (!aps.find(value => ap.ssid == value)) {
+      aps.push(ap.ssid);
+      trace(` scan: ${ap.ssid}\n`);
+    }
+  }
+});*/
 let monitor = new WiFi({ ssid, password }, function (msg, code) {
   trace(`callback: msg ${msg} code ${code}, times: ${++times}\n`);
   switch (msg) {
