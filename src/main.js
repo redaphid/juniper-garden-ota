@@ -77,7 +77,7 @@ const downloadOTAFirmware = async () => {
           break;
 
         case Request.responseFragment: {
-          const bytes = read(ArrayBuffer);
+          const bytes = request.read(ArrayBuffer);
           received += bytes.byteLength;
           ota.write(bytes);
           trace(`received ${received} of ${byteLength}\n`);
