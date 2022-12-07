@@ -58,7 +58,7 @@ const downloadOTAFirmware = async () => {
       switch (message) {
         case Request.status:
           if (200 !== value)
-            reject(Error("unexpected http status"))
+            return reject(Error("unexpected http status"))
           break;
 
         case Request.header:
@@ -70,29 +70,30 @@ const downloadOTAFirmware = async () => {
               received = 0;
             }
             catch (e) {
-              reject(new Error("unable to start OTA: " + e));
+              return reject(new Error("unable to start OTA: " + e));
             }
-            trace(`OTA object initialization complete`);
+            trace(`OTA object initialization complete\n`);
           }
           break;
 
         case Request.responseFragment: {
           const bytes = request.read(ArrayBuffer);
           received += bytes.byteLength;
-          ota.write(bytes);
           trace(`received ${received} of ${byteLength}\n`);
+          trace(`attempting to write ${bytes.byteLength} bytes\n`);
+          ota.write(bytes);
         } break;
 
         case Request.responseComplete:
           ota.complete();
           trace("ota complete\n");
-          resolve();
+          return resolve();
           break;
 
         default:
           if (message < 0) {
             ota?.cancel();
-            reject(new Error("http error"));
+            return reject(new Error("http error"));
           }
           break;
       }
