@@ -63,7 +63,7 @@ const downloadOTAFirmware = async () => {
       done = true
       _reject(err)
     }
-    const request = new Request({ host: "192.168.1.103", port: 8080, path: "/bin/ota1.bin" });
+    const request = new Request({ host: "192.168.1.103", port: 8080, path: "/bin/clock.update.current" });
     request.callback = function (message, value, etc) {
       if (done) return
       trace(`request: msg ${message} value ${value} etc ${etc}\n`);
