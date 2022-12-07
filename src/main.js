@@ -65,7 +65,7 @@ const downloadOTAFirmware = async () => {
     }
     const request = new Request({ host: "192.168.1.103", port: 8080, path: "/bin/ota1.bin" });
     request.callback = function (message, value, etc) {
-      if(done) return
+      if (done) return
       trace(`request: msg ${message} value ${value} etc ${etc}\n`);
       switch (message) {
         case Request.status: {
@@ -97,7 +97,8 @@ const downloadOTAFirmware = async () => {
           try {
             return ota.write(bytes);
           } catch (e) {
-            return reject(new Error("unable to write to OTA: " + e));
+            trace(`error writing to OTA: ${e}\n`);
+            return reject(e);
           }
         }
 
