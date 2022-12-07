@@ -72,6 +72,7 @@ const downloadOTAFirmware = async () => {
             catch (e) {
               reject(new Error("unable to start OTA: " + e));
             }
+            trace(`OTA object initialization complete`);
           }
           break;
 
@@ -90,7 +91,7 @@ const downloadOTAFirmware = async () => {
 
         default:
           if (message < 0) {
-            ota.cancel();
+            ota?.cancel();
             reject(new Error("http error"));
           }
           break;
