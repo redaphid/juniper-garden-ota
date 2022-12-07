@@ -18,7 +18,10 @@
 			"modules": {
 				"ota": "$(BUILD)/devices/esp32/modules/ota/*"
 			},
-			"preload": "ota"
+			"preload": [
+				"ota",
+				"http"
+			]
 		},
 		"...": {
 			"error": "unsupported target"

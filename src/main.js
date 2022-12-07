@@ -93,6 +93,7 @@ const downloadOTAFirmware = async () => {
           const bytes = request.read(ArrayBuffer);
           received += bytes.byteLength;
           trace(`received ${received} of ${byteLength}\n`);
+          trace(`bytes are: ${bytes}\n`);
           trace(`attempting to write ${bytes.byteLength} bytes\n`);
           try {
             return ota.write(bytes);
