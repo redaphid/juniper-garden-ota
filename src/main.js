@@ -51,51 +51,68 @@ const downloadOTAFirmware = async () => {
   let byteLength = -1;
   let received = 0;
 
-  return new Promise((resolve, reject) => {
+  return new Promise((_resolve, _reject) => {
+    let done = false
+    const resolve = (value) => {
+      if (done) return
+      done = true
+      _resolve(value)
+    }
+    const reject = (err) => {
+      if (done) return
+      done = true
+      _reject(err)
+    }
     const request = new Request({ host: "192.168.1.103", port: 8080, path: "/bin/ota1.bin" });
     request.callback = function (message, value, etc) {
+      if(done) return
       trace(`request: msg ${message} value ${value} etc ${etc}\n`);
       switch (message) {
-        case Request.status:
+        case Request.status: {
           if (200 !== value)
             return reject(Error("unexpected http status"))
-          break;
-
-        case Request.header:
+          return
+        }
+        case Request.header: {
           if ("content-length" === value) {
             try {
               byteLength = parseInt(etc);
               trace(`about to OTA: byteLength: ${byteLength}\n`);
               ota = new OTA({ byteLength });
               received = 0;
+              trace(`OTA object initialization complete\n`);
+              return
             }
             catch (e) {
               return reject(new Error("unable to start OTA: " + e));
             }
-            trace(`OTA object initialization complete\n`);
           }
-          break;
-
+          return
+        }
         case Request.responseFragment: {
           const bytes = request.read(ArrayBuffer);
           received += bytes.byteLength;
           trace(`received ${received} of ${byteLength}\n`);
           trace(`attempting to write ${bytes.byteLength} bytes\n`);
-          ota.write(bytes);
-        } break;
+          try {
+            return ota.write(bytes);
+          } catch (e) {
+            return reject(new Error("unable to write to OTA: " + e));
+          }
+        }
 
-        case Request.responseComplete:
+        case Request.responseComplete: {
           ota.complete();
           trace("ota complete\n");
           return resolve();
-          break;
-
-        default:
+        }
+        default: {
           if (message < 0) {
             ota?.cancel();
             return reject(new Error("http error"));
           }
-          break;
+          return
+        }
       }
     }
   })
