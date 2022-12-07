@@ -10,7 +10,7 @@ const main = async () => {
   trace('main\n');
   await connectToNetwork({ ssid, password });
   trace('connected\n');
-  const firmware = await downloadOTAFirmware();
+  await downloadOTAFirmware();
   trace('downloaded\n');
 }
 
@@ -52,7 +52,7 @@ const downloadOTAFirmware = async () => {
   let received = 0;
 
   return new Promise((resolve, reject) => {
-    let request = new Request({ host: "192.168.1.103", port: 8080, path: "/" });
+    const request = new Request({ host: "192.168.1.103", port: 8080, path: "/bin/ota1.bin" });
     request.callback = function (message, value, etc) {
       trace(`request: msg ${message} value ${value} etc ${etc}\n`);
       switch (message) {
