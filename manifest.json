@@ -2,22 +2,29 @@
 	"include": [
 		"$(MODDABLE)/examples/manifest_base.json",
 		"$(MODDABLE)/examples/manifest_net.json",
-		"$(MODDABLE)/modules/network/ble/manifest_server.json",
-		"./improv-wifi-mod/manifest.json"
+		"$(MODDABLE)/modules/network/wifi/manifest.json",
+		"$(MODDABLE)/modules/network/http/manifest.json"
 	],
 	"modules": {
 		"*": [
-			"./main"
+			"./src/*.js"
 		]
 	},
-	"preload": [
-		"btutils",
-		"gap",
-		"improv-wifi-mod/*"
-	],
-	"ble":{
-		"*": [
-			"./improv-wifi-mod/bleservices/*"
-		]
+	"platforms": {
+		"esp32": {
+			"build": {
+				"PARTITIONS_FILE": "./sdkconfig/partitions.csv"
+			},
+			"modules": {
+				"ota": "$(BUILD)/devices/esp32/modules/ota/*"
+			},
+			"preload": [
+				"ota",
+				"http"
+			]
+		},
+		"...": {
+			"error": "unsupported target"
+		}
 	}
 }

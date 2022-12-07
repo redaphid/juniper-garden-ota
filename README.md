@@ -1,3 +1,15 @@
+# I'm using a lazy way of storing wifi creds for the demo
+1. create a file called `wifi-credentials.js` in the `src/` of the project
+2. add the following code to the file:
+```js
+export const ssid = '<your-ssid>'
+export const password = '<your-password>'
+``
+
+# Warnings!
+You may need to run `npm run clean` to fix some issues with the build process.
+
+
 # Links to Remember:
 * [Moddable SDK](https://github.com/Moddable-OpenSource/moddable)
 * [improv wifi standard we're trying to implement](https://www.improv-wifi.com)
